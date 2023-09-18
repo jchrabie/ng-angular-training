@@ -25,5 +25,4 @@ export interface Results {
   score: number;
 }
 
-
-export type Difficulty = "Easy" | "Medium" | "Hard";
+export type Difficulty = 'Easy' | 'Medium' | 'Hard' | '';
