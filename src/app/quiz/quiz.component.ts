@@ -13,9 +13,9 @@ export class QuizComponent {
 
   @Output() changeQuestion = new EventEmitter<number>();
 
-  userAnswers: string[] = [];
   quizService = inject(QuizService);
   router = inject(Router);
+  userAnswers: string[] = [];
 
   submit(): void {
     this.quizService.computeScore(this.questions ?? [], this.userAnswers);

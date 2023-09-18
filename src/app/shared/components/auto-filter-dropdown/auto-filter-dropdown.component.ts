@@ -61,9 +61,7 @@ export class AutoFilterDropdownComponent<T extends { name: string }> {
       return item;
     }
 
-    const lowerCaseItem = item.toLowerCase();
-    const lowerCaseSelectedItem = this.searchTerm.toLowerCase();
-    const index = lowerCaseItem.indexOf(lowerCaseSelectedItem);
+    const index = item.toLowerCase().indexOf(this.searchTerm.toLowerCase());
 
     if (index === -1) {
       return item;
@@ -71,6 +69,7 @@ export class AutoFilterDropdownComponent<T extends { name: string }> {
 
     const matchedText = item.slice(index, index + this.searchTerm.length);
     const highlightedText = `<b>${matchedText}</b>`;
+
     return item.replace(matchedText, highlightedText);
   }
 

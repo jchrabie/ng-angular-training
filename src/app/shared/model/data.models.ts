@@ -25,4 +25,10 @@ export interface Results {
   score: number;
 }
 
-export type Difficulty = 'Easy' | 'Medium' | 'Hard' | '';
+export type Difficulty = 'Easy' | 'Medium' | 'Hard';
+
+export const DIFFICULTIES: { name: Difficulty }[] = [
+  { name: 'Easy' },
+  { name: 'Medium' },
+  { name: 'Hard' },
+];

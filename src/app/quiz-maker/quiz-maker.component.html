@@ -13,17 +13,16 @@
       [searchTerm]="currentSubCategory()?.name || ''"
       (itemSelected)="selectSubCategory($event)"
     ></app-auto-filter-dropdown>
-    <select #difficulty id="difficultySelect">
-      <option>Select difficulty</option>
-      <option>Easy</option>
-      <option>Medium</option>
-      <option>Hard</option>
-    </select>
+    <app-auto-filter-dropdown
+      placeholder="Select a difficulty"
+      [items]="difficulties"
+      (itemSelected)="selectDifficulty($event.name)"
+    ></app-auto-filter-dropdown>
     <button
       class="primary"
       id="createBtn"
-      [disabled]="!shouldCreateQuiz() || !difficulty.value"
-      (click)="createQuiz(difficulty.value)"
+      [disabled]="!shouldCreateQuiz()"
+      (click)="createQuiz()"
     >
       Create
     </button>
@@ -32,6 +31,6 @@
 <div class="row">
   <app-quiz
     [questions]="questions()"
-    (changeQuestion)="changeQuestion($event, difficulty.value)"
+    (changeQuestion)="changeQuestion($event)"
   ></app-quiz>
 </div>
