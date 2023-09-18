@@ -1,14 +1,18 @@
 <div class="row">
   <div class="col-sm-11">
-    <select #category id="categorySelect">
-      <option>Select category</option>
-      <option
-        [value]="category.id"
-        *ngFor="let category of categories$ | async"
-      >
-        {{ category.name }}
-      </option>
-    </select>
+    <app-auto-filter-dropdown
+      placeholder="Select a category"
+      [items]="categories()"
+      [searchTerm]="currentCategory()?.name || ''"
+      (itemSelected)="selectCategory($event)"
+    ></app-auto-filter-dropdown>
+    <app-auto-filter-dropdown
+      *ngIf="subCategories().length"
+      placeholder="Select a subcategory"
+      [items]="subCategories()"
+      [searchTerm]="currentSubCategory()?.name || ''"
+      (itemSelected)="selectSubCategory($event)"
+    ></app-auto-filter-dropdown>
     <select #difficulty id="difficultySelect">
       <option>Select difficulty</option>
       <option>Easy</option>
@@ -18,12 +22,16 @@
     <button
       class="primary"
       id="createBtn"
-      (click)="createQuiz(category.value, difficulty.value)"
+      [disabled]="!shouldCreateQuiz() || !difficulty.value"
+      (click)="createQuiz(difficulty.value)"
     >
       Create
     </button>
   </div>
 </div>
 <div class="row">
-  <app-quiz [questions]="questions$ | async"></app-quiz>
+  <app-quiz
+    [questions]="questions()"
+    (changeQuestion)="changeQuestion($event, difficulty.value)"
+  ></app-quiz>
 </div>
