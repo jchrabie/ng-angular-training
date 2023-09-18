@@ -1,0 +1,15 @@
+<div class="dropdown" (clickOutside)="closeDropdown()">
+  <input
+    type="text"
+    class="dropdown-select"
+    [placeholder]="placeholder"
+    [(ngModel)]="searchTerm"
+    (focus)="openDropdown($event.target)"
+    (keyup)="filterItems()"
+  />
+  <ul class="dropdown-menu" *ngIf="isDropdownOpen">
+    <li *ngFor="let item of filteredItems" (click)="searchItem(item)">
+      <span [innerHTML]="highlightMatchedText(item.name)"></span>
+    </li>
+  </ul>
+</div>
