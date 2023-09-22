@@ -9,27 +9,3 @@
   border-radius: 5px;
   cursor: pointer;
 }
-
-.dropdown-menu {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-top: none;
-  border-radius: 0 0 5px 5px;
-  z-index: 1;
-  margin: -5px 5px;
-  padding: 0;
-}
-
-.dropdown-menu li {
-  padding: 5px 15px;
-  cursor: pointer;
-  list-style: none;
-}
-
-.dropdown-menu li:hover {
-  background-color: #f0f0f0;
-}
