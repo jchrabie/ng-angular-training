@@ -7,9 +7,12 @@
     (focus)="openDropdown($event.target)"
     (keyup)="filterItems()"
   />
-  <ul class="dropdown-menu" *ngIf="isDropdownOpen">
-    <li *ngFor="let item of filteredItems" (click)="searchItem(item)">
+  <app-dropdown *ngIf="isDropdownOpen" (close)="closeDropdown()">
+    <app-dropdown-item
+      *ngFor="let item of filteredItems"
+      (selection)="searchItem(item)"
+    >
       <span [innerHTML]="highlightMatchedText(item.name)"></span>
-    </li>
-  </ul>
+    </app-dropdown-item>
+  </app-dropdown>
 </div>
