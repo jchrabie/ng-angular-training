@@ -1,12 +1,9 @@
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
-  ChangeDetectionStrategy,
-  Component,
-  Signal,
-  inject,
-  signal,
-} from '@angular/core';
-import { Observable } from 'rxjs';
-import { Category, Difficulty, Question } from '../shared/model/data.models';
+  Category,
+  DIFFICULTIES,
+  Difficulty,
+} from '../shared/model/data.models';
 import { CategoriesService, QuizService } from '../shared/services';
 
 @Component({
@@ -19,12 +16,12 @@ export class QuizMakerComponent {
   #quizService: QuizService = inject(QuizService);
   #categoriesService: CategoriesService = inject(CategoriesService);
 
-  questions = this.#quizService.questions;
-
   categories = this.#categoriesService.categories;
   subCategories = this.#categoriesService.subCategories;
   currentCategory = this.#categoriesService.currentCategory;
   currentSubCategory = this.#categoriesService.currentSubCategory;
+  questions = this.#quizService.questions;
+  readonly difficulties = DIFFICULTIES;
 
   selectCategory(categorySelected: Category): void {
     this.currentCategory.update(() => categorySelected);
@@ -35,11 +32,12 @@ export class QuizMakerComponent {
     this.currentSubCategory.update(() => subCategorySelected);
   }
 
-  createQuiz(difficulty: string): void {
-    this.#quizService.createQuiz(
-      this.currentSubCategory()?.id || this.currentCategory()?.id || 0,
-      difficulty as Difficulty
-    );
+  selectDifficulty(difficulty: Difficulty): void {
+    this.#quizService.difficulty.update(() => difficulty);
+  }
+
+  createQuiz(): void {
+    this.#quizService.createQuiz(this.#categoriesService.currentCategoryId());
   }
 
   shouldCreateQuiz(): boolean {
@@ -49,11 +47,10 @@ export class QuizMakerComponent {
     );
   }
 
-  changeQuestion(questionIndex: number, difficulty: string) {
+  changeQuestion(questionIndex: number): void {
     this.#quizService.changeQuestion(
       questionIndex,
-      difficulty as Difficulty,
-      this.currentSubCategory()?.id || this.currentCategory()?.id || 0
+      this.#categoriesService.currentCategoryId()
     );
   }
 }

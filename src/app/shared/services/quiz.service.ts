@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { first, map, tap } from 'rxjs';
 import {
   ApiQuestion,
@@ -8,7 +7,6 @@ import {
   Question,
   Results,
 } from '../model/data.models';
-import { CategoriesService } from './categories.service';
 
 @Injectable({
   providedIn: 'root',
@@ -19,15 +17,12 @@ export class QuizService {
   #latestResults = signal<Results | null>(null);
 
   shouldChangeQuestion = signal<boolean>(true);
-  questions = signal<Question[] | undefined>([]);
+  questions = signal<Question[]>([]);
+  difficulty = signal<Difficulty | null>(null);
 
-  createQuiz(categoryId: number, difficulty: Difficulty): void {
+  createQuiz(categoryId: number): void {
     this.#http
-      .get<{ results: ApiQuestion[] }>(
-        `${
-          this.#API_URL
-        }/api.php?amount=5&category=${categoryId}&difficulty=${difficulty.toLowerCase()}&type=multiple`
-      )
+      .get<{ results: ApiQuestion[] }>(this.#getUrl(5, categoryId))
       .pipe(map((res) => this.#mapResults(res.results)))
       .pipe(tap((q) => this.questions.update(() => q)))
       .pipe(tap(() => this.shouldChangeQuestion.update(() => true)))
@@ -35,23 +30,13 @@ export class QuizService {
       .subscribe();
   }
 
-  changeQuestion(
-    questionIndex: number,
-    difficulty: Difficulty,
-    categoryId: number
-  ) {
+  changeQuestion(questionIndex: number, categoryId: number) {
     this.#http
-      .get<{ results: ApiQuestion[] }>(
-        `${
-          this.#API_URL
-        }/api.php?amount=1&category=${categoryId}&difficulty=${difficulty.toLowerCase()}`
-      )
+      .get<{ results: ApiQuestion[] }>(this.#getUrl(1, categoryId))
       .pipe(map((res) => this.#mapResults(res.results)[0]))
       .pipe(
         tap((q) =>
-          this.questions.mutate(
-            (questions) => ((questions || [])[questionIndex] = q)
-          )
+          this.questions.mutate((questions) => (questions[questionIndex] = q))
         )
       )
       .pipe(tap(() => this.shouldChangeQuestion.update(() => false)))
@@ -73,6 +58,15 @@ export class QuizService {
 
   resetQuiz(): void {
     this.questions.update(() => []);
+    this.difficulty.update(() => null);
+  }
+
+  #getUrl(amout: number, categoryId: number): string {
+    return `${
+      this.#API_URL
+    }/api.php?amount=${amout}&category=${categoryId}&difficulty=${this.difficulty()?.toLowerCase()}${
+      amout > 1 ? '&type=multiple' : ''
+    }`;
   }
 
   #mapResults(results: ApiQuestion[]): Question[] {

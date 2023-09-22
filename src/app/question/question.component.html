@@ -1,16 +1,14 @@
 <p [innerHTML]="question.question"></p>
-<div>
-  <button
-    *ngFor="let answer of question.all_answers"
-    [class]="getButtonClass(answer)"
-    [innerHTML]="answer"
-    (click)="buttonClicked(answer)"
-  ></button>
-  <button
-    *ngIf="shouldChangeQuestion()"
-    class="inverse small"
-    (click)="changeQuestion.emit()"
-  >
-    Change question
-  </button>
-</div>
+<button
+  *ngFor="let answer of question.all_answers"
+  [class]="getButtonClass(answer)"
+  [innerHTML]="answer"
+  (click)="buttonClicked(answer)"
+></button>
+<button
+  *ngIf="shouldChangeQuestion()"
+  class="inverse small"
+  (click)="changeQuestion.emit()"
+>
+  Change question
+</button>

@@ -44,6 +44,9 @@ export class CategoriesService {
 
   currentCategory = signal<Category | null>(null);
   currentSubCategory = signal<Category | null>(null);
+  currentCategoryId: Signal<number> = computed(
+    () => this.currentSubCategory()?.id ?? this.currentCategory()?.id ?? 0
+  );
 
   loadAllCategories(): void {
     this.#allCategories = toSignal<Category[]>(
